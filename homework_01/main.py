@@ -1,7 +1,3 @@
-# 4) Реализовать функцию bank, которая приннимает следующие
-# аргументы: сумма депозита, кол-во лет, и процент. Результатом
-# выполнения должна быть сумма по истечению депозита
-
 # Task 1
 num_list = list(range(100))
 print([i for i in num_list if i and not i % 2])
@@ -101,21 +97,12 @@ for i in _list:
         print(i)
 
 # Task 4
-# def bank(sum, year, percent):
-#     i, year, percent, sum = 0, int(year), float(percent), float(sum)
-#
-#     while i < year * 12:
-#         sum += sum * (percent / 1200)
-#         i += 1
-#
-#     return sum
-
-def bank1(sum, year, percent):
+def bank(sum, year, percent):
     year, percent, sum = int(year), float(percent), float(sum)
 
-    for i in range(year * 12):
+    for _ in range(year * 12):
         sum += sum * (percent / 1200)
 
     return sum
 
-print(f'Total amount is {bank1(1000, 10, 10)}')
+print(f'Total amount is {bank(1000, 10, 10)}')
