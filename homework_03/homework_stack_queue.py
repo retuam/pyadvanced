@@ -1,4 +1,5 @@
-class Turn:
+class Queue:
+
 
     def __init__(self, elements):
         self._elements = []
@@ -27,44 +28,23 @@ class Turn:
         return str(self._elements)
 
 
-class Stack:
-
-    def __init__(self, elements):
-        self._elements = []
-
-        for i in list(elements):
-            self._elements.append(i)
-
-
-    def add(self, element):
-        self._elements.append(element)
-
-        return self._elements
-
+class Stack(Queue):
 
     def remove(self):
         return self._elements.pop()
 
 
-    def get_data(self):
-        return self._elements
-
-
-    def __str__(self):
-        return str(self._elements)
-
-
 if __name__ == '__main__':
-    print('Turn')
-    turn = Turn((1, 2, 3))
-    print(turn)
-    new = turn.add(6)
+    print('Queue')
+    queue = Queue((1, 2, 3))
+    print(queue)
+    new = queue.add(6)
     print(new)
-    turn.add(7)
-    print(turn)
-    remove = turn.remove()
+    queue.add(7)
+    print(queue)
+    remove = queue.remove()
     print(remove)
-    print(turn)
+    print(queue)
 
     print('Stack')
     stack = Stack((1, 2, 3))
