@@ -18,7 +18,6 @@ class Point:
         return self
 
 
-
     def __add__(self, other):
         _x = self._x + other._x + 100
         _y = self._y + other._y + 50
