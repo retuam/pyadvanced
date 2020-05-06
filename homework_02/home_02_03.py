@@ -10,7 +10,7 @@ class Point:
         return str((float(self._x), float(self._y), float(self._z)))
 
 
-    def __add__(self, other):
+    def __iadd__(self, other):
         self._x += other._x + 100
         self._y += other._y + 50
         self._z += other._z + 25
@@ -18,7 +18,16 @@ class Point:
         return self
 
 
-    def __sub__(self, other):
+
+    def __add__(self, other):
+        _x = self._x + other._x + 100
+        _y = self._y + other._y + 50
+        _z = self._z + other._z + 25
+
+        return Point(_x, _y, _z)
+
+
+    def __isub__(self, other):
         self._x -= other._x + 100
         self._y -= other._y + 50
         self._z -= other._z + 25
@@ -26,7 +35,15 @@ class Point:
         return self
 
 
-    def __mul__(self, other):
+    def __sub__(self, other):
+        _x = self._x - other._x - 100
+        _y = self._y - other._y - 50
+        _z = self._z - other._z - 25
+
+        return Point(_x, _y, _z)
+
+
+    def __imul__(self, other):
         self._x *= 0.5 * other._x
         self._y *= 0.25 * other._y
         self._z *= 0.125 * other._z
@@ -34,7 +51,15 @@ class Point:
         return self
 
 
-    def __truediv__(self, other):
+    def __mul__(self, other):
+        _x = self._x * 0.5 * other._x
+        _y = self._y * 0.25 * other._y
+        _z = self._z * 0.125 * other._z
+
+        return Point(_x, _y, _z)
+
+
+    def __itruediv__(self, other):
         self._x /= 0.5 * other._x
         self._y /= 0.25 * other._y
         self._z /= 0.125 * other._z
@@ -42,12 +67,16 @@ class Point:
         return self
 
 
-    def __neg__(self):
-        self._x *= -100
-        self._y *= -50
-        self._z *= -25
+    def __truediv__(self, other):
+        _x = self._x / (0.5 * other._x)
+        _y = self._y / (0.25 * other._y)
+        _z = self._z / (0.125 * other._z)
 
-        return self
+        return Point(_x, _y, _z)
+
+
+    def __neg__(self):
+        return Point(-100, -50, -25)
 
 
     def set_x(self, x):
