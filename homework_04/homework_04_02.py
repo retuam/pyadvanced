@@ -66,20 +66,20 @@ class Registration(Network):
     def get_login(self):
         return self._login
 
-    def __init__(self):
+    def __init__(self, mode=True):
+        super().__init__()
         self._login = self.set_login()
-        self._validate = self.validate_login()
+        if mode:
+            self._validate = self.validate_login()
         self._password = self.set_password()
-        self._validate = self.validate_password()
+        if mode:
+            self._validate = self.validate_password()
 
 
 class Authorization(Registration):
 
     def __init__(self):
-        self._is_login = False
-        self._user = None
-        self._login = self.set_login()
-        self._password = self.set_password()
+        super().__init__(False)
         if self.__search():
             self._user = Network.users[self._login]
             self._is_login = True
