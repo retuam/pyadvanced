@@ -1,32 +1,26 @@
 class Queue:
 
-
     def __init__(self, elements):
         self._elements = []
 
         for i in list(elements):
             self._elements.append(i)
 
-
     def add(self, element):
         self._elements.append(element)
 
         return self._elements
-
 
     def remove(self):
         _element = self._elements[:1][0]
         self._elements = self._elements[1:]
         return _element
 
-
     def get_data(self):
         return self._elements
 
-
     def __str__(self):
         return str(self._elements)
-
 
 class Stack(Queue):
 
