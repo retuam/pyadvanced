@@ -2,7 +2,7 @@ import time
 from random import randint
 
 
-def recursive_some_decorator(quantity=1):
+def recursive_some_decorator(quantity=1, returning=True):
 
     def my_some_decorator(func):
 
@@ -19,7 +19,8 @@ def recursive_some_decorator(quantity=1):
             end_time = time.time()
             print(f'Functions {func.__name__} executing quantity {quantity} with common time {end_time - start_time}')
 
-            return func(*args, **kwargs)
+            if returning:
+                return func(*args, **kwargs)
 
         return wrapper
 
@@ -34,7 +35,7 @@ def div(a, b):
 def rand():
     return randint(1, 10)
 
-@recursive_some_decorator(quantity=10)
+@recursive_some_decorator(quantity=10, returning=False)
 def my_text():
     return 'Street, ' + str(randint(1, 10))
 
