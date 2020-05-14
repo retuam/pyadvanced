@@ -155,7 +155,8 @@ class User(Registration):
 
     def view(self):
         if self.get_role() == 'Administrator':
-            print([value.__str__() for value in Network.users.values()])
+            with shelve.open(self.db) as user_db:
+                print([value.__str__() for value in user_db.values()])
         else:
             print(self)
 
