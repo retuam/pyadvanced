@@ -6,7 +6,7 @@ class File:
         print(f"Entered file")
         return self._file
 
-    def __exit__(self, _type, value, traceback):
+    def __exit__(self, ex_type, ex_value, ex_traceback):
         print(f"Close file")
         self._file.close()
 
