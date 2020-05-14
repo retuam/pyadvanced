@@ -1,8 +1,10 @@
 import time
+import shelve
 
 
 class Network:
 
+    db = "users"
     users = {}
 
     def __init__(self):
@@ -30,17 +32,23 @@ class Network:
             }
 
     def exit(self):
+        with shelve.open(self.db) as user_db:
+            user_db[self._login] = self
+
         return Network()
 
 
 class Registration(Network):
 
     def validate_login(self):
-        if self._login in Network.users.keys():
-            print('Login already exist')
-            return False
+        flag = True
 
-        return True
+        with shelve.open(self.db) as user_db:
+            if self._login in user_db.keys():
+                print('Login already exist')
+                flag = False
+
+        return flag
 
     def validate_password(self):
         if not self._password.isalnum():
@@ -86,7 +94,8 @@ class Authorization(Registration):
     def __init__(self):
         super().__init__(False)
         if self.__search():
-            self._user = Network.users[self._login]
+            with shelve.open(self.db) as user_db:
+                self._user = user_db[self._login]
             self._is_login = True
             print(f'Authorization for {self._login}')
         else:
@@ -94,7 +103,8 @@ class Authorization(Registration):
 
     def __search(self):
         try:
-            return Network.users[self._login].get_password() == self._password
+            with shelve.open(self.db) as user_db:
+                return user_db[self._login].get_password() == self._password
         except KeyError:
             return False
 
@@ -121,7 +131,10 @@ class User(Registration):
                 self._role = 'Administrator'
             else:
                 self._role = 'User'
-            Network.users[self._login] = self
+
+            with shelve.open(self.db) as user_db:
+                user_db[self._login] = self
+
             print(f'Valid registration for {self._login}')
 
     def __str__(self):
