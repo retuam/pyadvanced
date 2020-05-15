@@ -9,14 +9,10 @@ class Network:
 
     def __init__(self):
         self._validate = True
-        self._user = None
         self._is_login = False
 
     def get_is_login(self):
         return self._is_login
-
-    def get_user(self):
-        return self._user
 
     def get_navigation(self):
         if self._is_login:
@@ -31,10 +27,24 @@ class Network:
                 1: 'authorization',
             }
 
-    def exit(self):
+    def _set_user(self):
         with shelve.open(self.db) as user_db:
-            user_db[self._login] = self
+            self._password = user_db[self._login]['password']
+            self._role = user_db[self._login]['role']
+            self._date_reg = user_db[self._login]['date_reg']
+            self._posts = user_db[self._login]['posts']
 
+    def _save_user(self):
+        with shelve.open(self.db) as user_db:
+            user_db[self._login] = {
+                'password': self._password,
+                'role': self._role,
+                'date_reg': self._date_reg,
+                'posts': self._posts,
+            }
+
+    def exit(self):
+        self._save_user()
         return Network()
 
 
@@ -42,7 +52,6 @@ class Registration(Network):
 
     def validate_login(self):
         flag = True
-
         with shelve.open(self.db) as user_db:
             if self._login in user_db.keys():
                 print('Login already exist')
@@ -91,25 +100,25 @@ class Registration(Network):
 
 class Authorization(Registration):
 
-    def __init__(self):
-        super().__init__(False)
-        if self.__search():
-            with shelve.open(self.db) as user_db:
-                self._user = user_db[self._login]
-            self._is_login = True
-            print(f'Authorization for {self._login}')
-        else:
-            print(f'Wrong login or password')
+    def __init__(self, reg_mode):
+        super().__init__(reg_mode)
+        if not reg_mode:
+            if self.__search():
+                self._set_user()
+                self._is_login = True
+                print(f'Authorization for {self._login}')
+            else:
+                print(f'Wrong login or password')
 
     def __search(self):
         try:
             with shelve.open(self.db) as user_db:
-                return user_db[self._login].get_password() == self._password
+                return user_db[self._login]['password'] == self._password
         except KeyError:
             return False
 
 
-class User(Registration):
+class User(Authorization):
 
     def get_date_reg(self):
         return self._date_reg
@@ -120,22 +129,20 @@ class User(Registration):
     def get_posts(self):
         return self._posts
 
-    def __init__(self):
-        super().__init__()
-        self._posts = []
-        self._role = 'Guest'
-        self._date_reg = None
-        if self._validate:
-            self._date_reg = time.strftime("%d.%M.%Y", time.localtime())
-            if self._login == 'admin':
-                self._role = 'Administrator'
-            else:
-                self._role = 'User'
-
-            with shelve.open(self.db) as user_db:
-                user_db[self._login] = self
-
-            print(f'Valid registration for {self._login}')
+    def __init__(self, reg_mode=True):
+        super().__init__(reg_mode)
+        if reg_mode:
+            self._posts = []
+            self._role = 'Guest'
+            self._date_reg = None
+            if self._validate:
+                self._date_reg = time.strftime("%d.%M.%Y", time.localtime())
+                if self._login == 'admin':
+                    self._role = 'Administrator'
+                else:
+                    self._role = 'User'
+                self._save_user()
+                print(f'Valid registration for {self._login}')
 
     def __str__(self):
         return str({
@@ -176,14 +183,19 @@ if __name__ == '__main__':
         except KeyError:
             break
 
+        # registration
         if _action == 0 and not network.get_is_login():
             User()
+        # authorization
         elif _action == 1 and not network.get_is_login():
-            network = Authorization()
-            user = network.get_user()
+            network = User(reg_mode=False)
+            user = network
+        # exit
         elif _action == 0 and network.get_is_login():
             network = network.exit()
+        # view
         elif _action == 2 and network.get_is_login():
             user.view()
+        # add post
         elif _action == 1 and network.get_is_login():
             user.add_post()
