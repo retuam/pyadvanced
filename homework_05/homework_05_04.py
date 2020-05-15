@@ -56,7 +56,6 @@ class Registration(Network):
             if self._login in user_db.keys():
                 print('Login already exist')
                 flag = False
-
         return flag
 
     def validate_password(self):
@@ -66,7 +65,6 @@ class Registration(Network):
         elif self._password != self.set_password_validate():
             print('Validate password isn\'t similar to password')
             return False
-
         return True
 
     @staticmethod
