@@ -7,11 +7,9 @@ class Shop:
         self.name = name
         Shop.count += sale
 
-
     def __str__(self):
         output = self.name + ' - ' + str(self.sale) + '. All shops - ' + str(self.count)
         return output
-
 
     def add_sale(self, sale):
         self.sale += sale
