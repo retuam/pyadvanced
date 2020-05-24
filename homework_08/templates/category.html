@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Category {% if category.title %}{{category.title}}{% endif %}</title>
+</head>
+<body>
+
+    <ul>
+        {% for row in menu %}
+        <li><a href="{{row.url}}">{{row.title}}</a></li>
+        {% endfor %}
+    </ul>
+
+    {% if category.title %}
+    <h1>Category: {{category.title}}</h1>
+    {% endif %}
+
+    {% if products %}
+    <ul>
+        {% for product in products %}
+        <li><a href="/product/{{product.id}}"> {{product.title}} </a></li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+</body>
+</html>

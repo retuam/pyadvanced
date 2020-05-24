@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add product</title>
+</head>
+<body>
+
+    <ul>
+        {% for row in menu %}
+        <li><a href="{{row.url}}">{{row.title}}</a></li>
+        {% endfor %}
+    </ul>
+
+    <h1>Add product</h1>
+
+    <form action="/add/product" method="post">
+
+        <p><b>Title</b></p>
+        <p><input type="text" name="title"></p>
+
+        <p><b>If sale</b></p>
+        <p>
+            <select name="insale">
+                <option value="1">Sale</option>
+                <option value="0">No sale</option>
+            </select>
+        </p>
+
+        <p><b>If stock</b></p>
+        <p>
+            <select name="instock">
+                <option value="1">Stock</option>
+                <option value="0">No stock</option>
+            </select>
+        </p>
+
+        <p><b>Category</b></p>
+        <p>
+            {% if categories %}
+            <select name="category_id">
+                {% for category in categories %}
+                <option value="{{category.id}}">{{category.title}}</option>
+                {% endfor %}
+            </select>
+            {% endif %}
+        </p>
+
+        <p><b>Price</b></p>
+        <p><input type="text" name="price"></p>
+
+        <p><b>Quantity of product</b></p>
+        <p><input type="text" name="qty"></p>
+
+        <p><b>Description</b></p>
+        <p><textarea name="description"></textarea></p>
+
+        <p><input type="submit" value="Submit"></p>
+
+    </form>
+
+</body>
+</html>

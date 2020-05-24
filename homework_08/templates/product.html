@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Product {% if product.title %}{{product.title}}{% endif %}</title>
+</head>
+<body>
+
+    <ul>
+        {% for row in menu %}
+        <li><a href="{{row.url}}">{{row.title}}</a></li>
+        {% endfor %}
+    </ul>
+
+    {% if product.title %}
+    <h1>{{product.title}}</h1>
+    {% endif %}
+
+    {% if product.price %}
+    <p>
+        Price: {{product.price}}
+    </p>
+    {% endif %}
+
+    {% if product.insale %}
+    <p>
+        Sale
+    </p>
+    {% else %}
+    <p>
+        No sale
+    </p>
+    {% endif %}
+
+    {% if product.instock %}
+    <p>
+        Exist
+    </p>
+    {% else %}
+    <p>
+        No exist
+    </p>
+    {% endif %}
+
+    <p>
+        Quantity: {{product.qty}}
+    </p>
+
+    {% if product.description %}
+    <p>
+        Description: {{product.description}}
+    </p>
+    {% endif %}
+
+    {% if product.category_id %}
+    <p>
+        Category: {{product.category_id}}
+    </p>
+    {% endif %}
+
+</body>
+</html>
