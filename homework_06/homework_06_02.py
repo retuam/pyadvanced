@@ -5,6 +5,13 @@
 
 class MyDict:
 
+    def __init__(self, **kwargs):
+        self._current = 0
+        self._structure = {}
+        for key in kwargs:
+            self[key] = kwargs[key]
+        self._len = len(kwargs)
+
     def __iter__(self):
         self._current = 0
         return self
@@ -53,15 +60,6 @@ class MyDict:
         for key, value in other.items():
             new_obj[key] = value
         return new_obj
-
-    def __init__(self, **kwargs):
-        self._current = 0
-        self._structure = {}
-        i = 0
-        for key in kwargs:
-            self.__setitem__(key, kwargs[key])
-            i += 1
-        self._len = i
 
     def __getitem__(self, item):
         return item, self._structure[item]
