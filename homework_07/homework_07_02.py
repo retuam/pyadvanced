@@ -12,7 +12,6 @@ from homework_07 import homework_07_01 as cm
 class Student:
 
     def __init__(self, *student):
-        print(student)
         self._id, self._first_name, self._last_name, self._stnumber, self._faculty = student
 
     def __str__(self):
@@ -109,6 +108,49 @@ class Users:
             return 'No authorized user'
 
 
+class StudentDb:
+
+    def __init__(self, _conn):
+        self.conn = _conn
+        self.cursor = self.conn.cursor()
+
+    def get_user(self, login, password):
+        self.cursor.execute("SELECT * FROM users WHERE login = ? AND password = ?", (login, password))
+        return self.cursor.fetchone()
+
+    def get_students(self):
+        self.cursor.execute("SELECT * FROM students WHERE 1")
+        return self.cursor.fetchall()
+
+    def get_students_graduated(self):
+        self.cursor.execute("""SELECT students.* FROM students
+                                       LEFT JOIN marks ON marks.student_id = students.id WHERE marks.mark = 5""")
+        return self.cursor.fetchall()
+
+    def get_students_by_number(self, stnumber):
+        self.cursor.execute("SELECT * FROM students WHERE stnumber = ?", (stnumber, ))
+        return self.cursor.fetchone()
+
+    def get_marks(self, number):
+        self.cursor.execute("SELECT * FROM marks WHERE student_id = ?", (number, ))
+        return self.cursor.fetchall()
+
+    def update_student(self, student):
+        self.cursor.execute("""UPDATE students SET first_name = ?, last_name = ?, stnumber = ?, faculty = ?
+                                   WHERE stnumber = ?""", (student.first_name, student.last_name, student.stnumber,
+                                                     student.faculty, student.stnumber))
+        self.conn.commit()
+
+    def delete_student(self, number):
+        self.cursor.execute("DELETE FROM students WHERE id = ?", (number, ))
+        self.conn.commit()
+
+    def insert_student(self, student):
+        self.cursor.execute("INSERT INTO students (first_name, last_name, stnumber, faculty) VALUES (?, ?, ?, ?)",
+                                   (student.first_name, student.last_name, student.stnumber, student.faculty))
+        self.conn.commit()
+
+
 if __name__ == '__main__':
     db = 'students_new.db'
 
@@ -117,10 +159,8 @@ if __name__ == '__main__':
     user.set_password()
 
     with cm.DataConn(db) as conn:
-        cursor = conn.cursor()
-        cursor.execute("SELECT * FROM users WHERE login = ? AND password = ?",
-                       (user.get_login(), user.get_password()))
-        user.set_session(cursor.fetchone())
+        stdb = StudentDb(conn)
+        user.set_session(stdb.get_user(user.get_login(), user.get_password()))
 
         while user.get_id():
             print(*[(str(key) + ' - ' + value) for key, value in user.get_menu().items()])
@@ -129,16 +169,11 @@ if __name__ == '__main__':
                 if not action:
                     user = Users()
                 elif action == 1:
-                    cursor.execute("SELECT * FROM students WHERE 1")
-                    [print(row) for row in cursor.fetchall()]
+                    [print(row) for row in stdb.get_students()]
                 elif action == 2:
-                    cursor.execute("""SELECT students.* FROM students
-                                       LEFT JOIN marks ON marks.student_id = students.id WHERE marks.mark = 5""")
-                    [print(row) for row in cursor.fetchall()]
+                    [print(row) for row in stdb.get_students_graduated()]
                 elif action == 3:
-                    stnumber = int(input("Select number: "))
-                    cursor.execute("SELECT * FROM students WHERE stnumber = ?", (stnumber, ))
-                    value = cursor.fetchone()
+                    value = stdb.get_students_by_number(int(input("Select number: ")))
                     if value:
                         student = Student(*value)
                         user.number = student.get_id()
@@ -148,9 +183,8 @@ if __name__ == '__main__':
                 elif action in (4, 5, 6) and not user.number:
                     print('Not selected student number')
                 elif action == 4 and user.number:
-                    cursor.execute("SELECT * FROM marks WHERE student_id = ?", (user.number, ))
                     print(student)
-                    for mark in cursor.fetchall():
+                    for mark in stdb.get_marks(user.number):
                         print(f'{mark[3]}: {mark[1]}')
                 elif action == 5 and user.number:
                     first_name = input('Edit first name or pass: ')
@@ -169,21 +203,15 @@ if __name__ == '__main__':
                     if faculty:
                         student.faculty = str(faculty)
 
-                    cursor.execute("""UPDATE students SET first_name = ?, last_name = ?, stnumber = ?, faculty = ?
-                                   WHERE id = ?""", (student.first_name, student.last_name, student.stnumber,
-                                                             student.faculty, user.number))
-                    conn.commit()
+                    stdb.update_student(student)
                 elif action == 6 and user.number:
-                    cursor.execute("DELETE FROM students WHERE id = ?", (user.number, ))
-                    conn.commit()
+                    stdb.delete_student(user.number)
                     del student
                     user.number = None
                 elif action == 7:
                     student = Student(None, str(input('Edit first name: ')), str(input('Edit last name: ')),
                                       int(input('Edit student number: ')), str(input('Edit student faculty: ')))
-                    cursor.execute("INSERT INTO students (first_name, last_name, stnumber, faculty) VALUES (?, ?, ?, ?)",
-                                   (student.first_name, student.last_name, student.stnumber, student.faculty))
-                    conn.commit()
+                    stdb.insert_student(student)
             else:
                 print('Unknown action')
 
