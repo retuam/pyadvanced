@@ -6,6 +6,18 @@
 
 class MyList:
 
+    def __init__(self, *args):
+        self._current = 0
+        self._len = 0
+        for _ in args:
+            self._len += 1
+        self._structure = [0] * self._len
+        for value in enumerate(args):
+            self[value[0]] = value[1]
+
+    def __str__(self):
+        return f'MyList = {self._structure}'
+
     def __iter__(self):
         self._current = 0
         return self
@@ -15,21 +27,7 @@ class MyList:
             raise StopIteration
         current = self._current
         self._current += 1
-        return self.__getitem__(current)
-
-    def __str__(self):
-        return f'MyList = {self._structure}'
-
-    def __init__(self, *args):
-        self._current = 0
-        self._len = 0
-        for _ in args:
-            self._len += 1
-        self._structure = [0] * self._len
-        i = 0
-        for value in args:
-            self.__setitem__(i, value)
-            i += 1
+        return self[current]
 
     def __getitem__(self, item):
         return self._structure[item]
@@ -53,10 +51,10 @@ class MyList:
 
     def append(self, value):
         self._len += 1
-        self.__setitem__(self._len, value)
+        self[self._len] = value
 
     def insert(self, key, value):
-        self.__setitem__(key, value)
+        self._structure = self._structure[:key] + [value] + self._structure[key:]
 
     def remove(self, value):
         i = 0
@@ -80,6 +78,8 @@ if __name__ == '__main__':
     print(obj[0])
     print(obj[4])
     print(obj)
+    obj.insert(2, 70)
+    print(obj)
     obj.pop(2)
     print(obj)
     obj.remove(30)
@@ -91,4 +91,6 @@ if __name__ == '__main__':
     obj2 = MyList(0, 12, 22, 32, 42)
     obj3 = obj1 + obj2
     print(obj3)
+
+
 
