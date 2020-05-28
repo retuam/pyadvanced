@@ -16,6 +16,9 @@
 
     <form action="/add/product" method="post">
 
+        <p><b>Description</b></p>
+        <p><textarea name="description"></textarea></p>
+
         <p><b>Title</b></p>
         <p><input type="text" name="title"></p>
 
@@ -46,14 +49,11 @@
             {% endif %}
         </p>
 
-        <p><b>Price</b></p>
-        <p><input type="text" name="price"></p>
-
         <p><b>Quantity of product</b></p>
         <p><input type="text" name="qty"></p>
 
-        <p><b>Description</b></p>
-        <p><textarea name="description"></textarea></p>
+        <p><b>Price</b></p>
+        <p><input type="text" name="price"></p>
 
         <p><input type="submit" value="Submit"></p>
 

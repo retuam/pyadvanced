@@ -2,6 +2,13 @@
 import sqlite3
 
 
+def dict_factory(cursor, row):
+    d = {}
+    for i, column in enumerate(cursor.description):
+        d[column[0]] = row[i]
+    return d
+
+
 class DataConn:
 
     def __init__(self, db_name):

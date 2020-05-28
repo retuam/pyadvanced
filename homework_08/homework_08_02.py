@@ -2,15 +2,16 @@
 # новые товары и категории.
 from flask import Flask, request
 from flask import render_template
-from homework_08 import homework_08_01 as front
 from homework_08 import product as prod
 from homework_08 import category as cat
 
 
+db = 'shop.db'
 app = Flask(__name__)
 
 
-front.menu += [
+menu = [
+    {'url': '/', 'title': 'Home'},
     {'url': '/add/category', 'title': 'Add category'},
     {'url': '/add/product', 'title': 'Add product'},
 ]
@@ -18,30 +19,34 @@ front.menu += [
 
 @app.route('/')
 def list_category():
-    return front.list_category()
+    categories = cat.CategorySearch(db).get_categories()
+    return render_template('index.html', categories=categories, menu=menu)
 
 
 @app.route('/category/<int:_id>')
 def single_category(_id):
-    return front.single_category(_id)
+    category = cat.CategorySearch(db).get_category(_id)
+    products = prod.ProductSearch(db).get_products(_id)
+    return render_template('category.html', category=category, products=products, menu=menu)
 
 
 @app.route('/product/<int:_id>')
 def single_product(_id):
-    return front.single_product(_id)
+    product = prod.ProductSearch(db).get_product(_id)
+    return render_template('product.html', product=product, menu=menu)
 
 
 @app.route('/add/category', methods=["GET", "POST"])
 def add_category():
-    cat.CategorySearch(front.db).insert(request.form)
-    return render_template('add_category.html', menu=front.menu)
+    cat.CategorySearch(db).insert(request.form)
+    return render_template('add_category.html', menu=menu)
 
 
 @app.route('/add/product', methods=["GET", "POST"])
 def add_product():
-    prod.ProductSearch(front.db).insert(request.form)
-    categories = cat.CategorySearch(front.db).get_categories()
-    return render_template('add_product.html', categories=categories, menu=front.menu)
+    prod.ProductSearch(db).insert(request.form)
+    categories = cat.CategorySearch(db).get_categories()
+    return render_template('add_product.html', categories=categories, menu=menu)
 
 
 if __name__ == '__main__':
