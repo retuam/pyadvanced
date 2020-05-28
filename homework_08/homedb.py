@@ -13,12 +13,5 @@ class DataConn:
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.conn.close()
-        if exc_val:
-            raise ValueError("ValueError exception db")
-
-
-if __name__ == '__main__':
-    db = 'students.db'
-
-    with DataConn(db) as conn:
-        cursor = conn.cursor()
+        if exc_type:
+            raise exc_type(exc_val)

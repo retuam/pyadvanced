@@ -1,3 +1,6 @@
+from homework_08 import homedb as cm
+
+
 class Product:
 
     def __init__(self, _id=None, title=None, insale=None, instock=None, category_id=None, price=None, qty=None,
@@ -77,3 +80,43 @@ class Product:
         self._description = value
 
     description = property(get_description, set_description)
+
+
+class ProductSearch:
+
+    def __init__(self, db):
+        self.products = []
+        self.product = None
+        self.db = db
+
+    def get_products(self, _id):
+        with cm.DataConn(self.db) as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM product WHERE category_id = ?", (_id, ))
+            for product in cursor.fetchall():
+                self.products.append(Product(*product))
+
+        return self.products
+
+    def get_product(self, _id):
+        with cm.DataConn(self.db) as conn:
+            cursor = conn.cursor()
+            cursor.execute("""SELECT product.id AS id, product.title AS title, product.insale AS insale, 
+            product.instock AS instock, category.title AS category_id, product.price AS price, product.qty AS qty, 
+            product.description AS description FROM product 
+            LEFT JOIN category ON category.id = product.category_id WHERE product.id = ?""", (_id, ))
+            self.product = Product(*cursor.fetchone())
+
+        return self.product
+
+    def insert(self, _post):
+        if _post:
+            product = Product(**dict(_post))
+            with cm.DataConn(self.db) as conn:
+                cursor = conn.cursor()
+                cursor.execute("""INSERT INTO product 
+                (title, insale, instock, price, qty, category_id, description) VALUES (?, ?, ?, ?, ?, ?, ?)""",
+                               (product.title, product.insale, product.instock, product.price,
+                                product.qty, product.category_id, product.description))
+                conn.commit()
+
