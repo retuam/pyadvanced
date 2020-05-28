@@ -4,7 +4,7 @@ from homework_08 import homedb as cm
 class Product:
 
     def __init__(self, id=None, title=None, insale=None, instock=None, category_id=None, price=None, qty=None,
-                 description=None):
+                 description=None, **kwargs):
         self._id = id
         self._title = title
         self._insale = insale

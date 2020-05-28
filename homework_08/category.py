@@ -3,7 +3,7 @@ from homework_08 import homedb as cm
 
 class Category:
 
-    def __init__(self, id=None, title=None):
+    def __init__(self, id=None, title=None, **kwargs):
         self._id = id
         self._title = title
 
