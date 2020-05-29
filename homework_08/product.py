@@ -113,8 +113,6 @@ class ProductSearch(Product):
 
     def insert(self, _post):
         if _post:
-            print(_post)
-            print(dict(_post))
             product = Product(**_post)
             with cm.DataConn(self.db) as conn:
                 cursor = conn.cursor()
