@@ -9,7 +9,7 @@ class Mark(ar.ActiveRecord):
             self._id = id
             row = self.one()
             self._mark = row['mark']
-            self._student_id = row['_student_id']
+            self._student_id = row['student_id']
             self._course_id = row['course_id']
         if mark:
             self._mark = mark
@@ -49,10 +49,10 @@ class Mark(ar.ActiveRecord):
         return f'INSERT INTO {self._table} (mark, student_id, course_id) VALUES (?, ?, ?)'
 
     def get_insert_data(self):
-        return tuple(self.mark, self.student_id, self.course_id)
+        return self.mark, self.student_id, self.course_id
 
     def get_update(self):
         return f'UPDATE {self._table} SET title = ?, student_id = ?, course_id = ? WHERE id = ?'
 
     def get_update_data(self):
-        return tuple(self.mark, self.student_id, self.course_id)
+        return self.mark, self.student_id, self.course_id, self.id

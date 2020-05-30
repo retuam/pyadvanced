@@ -8,6 +8,11 @@ from homework_09.models_for_09 import student_group as sg, curator, course, facu
 
 app = Flask(__name__)
 
+@app.route('/', methods=['GET'])
+def all_students():
+    data = student.Student().all_format()
+    return jsonify(data)
+
 
 @app.route('/graduated', methods=['GET'])
 def graduated():
@@ -15,7 +20,7 @@ def graduated():
     return jsonify(data)
 
 
-@app.route('/curator/<int:id>', methods=['GET'])
+@app.route('/for-curator/<int:id>', methods=['GET'])
 def student_curators(id):
     data = student.Student().curators(id)
     return jsonify(data)
@@ -23,7 +28,7 @@ def student_curators(id):
 
 @app.route('/student', methods=['GET', 'POST'])
 @app.route('/student/<int:id>', methods=['GET', 'PUT', 'DELETE'])
-def student(id=None):
+def api_student(id=None):
     if request.method == 'GET':
         data = student.Student().all()
         if id:
@@ -35,7 +40,7 @@ def student(id=None):
         return jsonify(data)
 
     elif request.method == 'PUT':
-        data = student.Student(id=id).update(**request.json)
+        data = student.Student(**request.json).update()
         return jsonify(data)
 
     elif request.method == 'DELETE':
@@ -45,7 +50,7 @@ def student(id=None):
 
 @app.route('/mark', methods=['GET', 'POST'])
 @app.route('/mark/<int:id>', methods=['GET', 'PUT', 'DELETE'])
-def mark(id=None):
+def api_mark(id=None):
     if request.method == 'GET':
         data = mark.Mark().all()
         if id:
@@ -57,7 +62,7 @@ def mark(id=None):
         return jsonify(data)
 
     elif request.method == 'PUT':
-        data = mark.Mark(id=id).update(**request.json)
+        data = mark.Mark(**request.json).update()
         return jsonify(data)
 
     elif request.method == 'DELETE':
@@ -67,7 +72,7 @@ def mark(id=None):
 
 @app.route('/faculty', methods=['GET', 'POST'])
 @app.route('/faculty/<int:id>', methods=['GET', 'PUT', 'DELETE'])
-def faculty(id=None):
+def api_faculty(id=None):
     if request.method == 'GET':
         data = faculty.Faculty().all()
         if id:
@@ -79,7 +84,7 @@ def faculty(id=None):
         return jsonify(data)
 
     elif request.method == 'PUT':
-        data = faculty.Faculty(id=id).update(**request.json)
+        data = faculty.Faculty(**request.json).update()
         return jsonify(data)
 
     elif request.method == 'DELETE':
@@ -89,7 +94,7 @@ def faculty(id=None):
 
 @app.route('/curator', methods=['GET', 'POST'])
 @app.route('/curator/<int:id>', methods=['GET', 'PUT', 'DELETE'])
-def curator(id=None):
+def api_curator(id=None):
     if request.method == 'GET':
         data = curator.Curator().all()
         if id:
@@ -101,7 +106,7 @@ def curator(id=None):
         return jsonify(data)
 
     elif request.method == 'PUT':
-        data = curator.Curator(id=id).create(**request.json)
+        data = curator.Curator(**request.json).create()
         return jsonify(data)
 
     elif request.method == 'DELETE':
@@ -111,7 +116,7 @@ def curator(id=None):
 
 @app.route('/course', methods=['GET', 'POST'])
 @app.route('/course/<int:id>', methods=['GET', 'PUT', 'DELETE'])
-def course(id=None):
+def api_course(id=None):
     if request.method == 'GET':
         data = course.Course().all()
         if id:
@@ -123,7 +128,7 @@ def course(id=None):
         return jsonify(data)
 
     elif request.method == 'PUT':
-        data = course.Course(id=id).create(**request.json)
+        data = course.Course(**request.json).create()
         return jsonify(data)
 
     elif request.method == 'DELETE':
@@ -133,7 +138,7 @@ def course(id=None):
 
 @app.route('/student-group', methods=['GET', 'POST'])
 @app.route('/student-group/<int:id>', methods=['GET', 'PUT', 'DELETE'])
-def sg(id=None):
+def api_group(id=None):
     if request.method == 'GET':
         data = sg.StudentGroup().all()
         if id:
@@ -145,7 +150,7 @@ def sg(id=None):
         return jsonify(data)
 
     elif request.method == 'PUT':
-        data = sg.StudentGroup(id=id).create(**request.json)
+        data = sg.StudentGroup(**request.json).create()
         return jsonify(data)
 
     elif request.method == 'DELETE':

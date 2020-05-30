@@ -9,12 +9,15 @@ class Student(ar.ActiveRecord):
         if id:
             self._id = id
             row = self.one()
-            self._first_name = row['first_name']
-            self._last_name = row['last_name']
-            self._padre_name = row['padre_name']
-            self._group_id = row['group_id']
-            self._faculty_id = row['faculty_id']
-            self._curator_id = row['curator_id']
+            try:
+                self._first_name = row['first_name']
+                self._last_name = row['last_name']
+                self._padre_name = row['padre_name']
+                self._group_id = row['group_id']
+                self._faculty_id = row['faculty_id']
+                self._curator_id = row['curator_id']
+            except TypeError:
+                print('No data exist by ID')
         if first_name:
             self._first_name = first_name
         if last_name:
@@ -61,7 +64,7 @@ class Student(ar.ActiveRecord):
     def set_first_name(self, value):
         self._first_name = value
 
-    first_name = property(set_first_name, get_first_name)
+    first_name = property(get_first_name, set_first_name)
 
     def get_last_name(self):
         return self._last_name
@@ -69,7 +72,7 @@ class Student(ar.ActiveRecord):
     def set_last_name(self, value):
         self._last_name = value
 
-    last_name = property(set_last_name, get_last_name)
+    last_name = property(get_last_name, set_last_name)
 
     def get_padre_name(self):
         return self._padre_name
@@ -77,30 +80,40 @@ class Student(ar.ActiveRecord):
     def set_padre_name(self, value):
         self._padre_name = value
 
-    padre_name = property(set_padre_name, get_padre_name)
+    padre_name = property(get_padre_name, set_padre_name)
 
     def get_insert(self):
         return f'''INSERT INTO {self._table} (first_name, last_name, padre_name, faculty_id, group_id, curator_id) 
                VALUES (?, ?, ?, ?, ?, ?)'''
 
     def get_insert_data(self):
-        return tuple(self.first_name, self.last_name, self.padre_name, self.faculty_id, self.group_id, self.curator_id)
+        return self.first_name, self.last_name, self.padre_name, self.faculty_id, self.group_id, self.curator_id
 
     def get_update(self):
         return f'''UPDATE {self._table} SET first_name = ?, last_name = ?, padre_name = ?, faculty_id = ?, group_id = ?,
          curator_id = ? WHERE id = ?'''
 
     def get_update_data(self):
-        return tuple(self.first_name, self.last_name, self.padre_name, self.faculty_id, self.group_id,
-                     self.curator_id, self.id)
+        return self.first_name, self.last_name, self.padre_name, self.faculty_id, self.group_id, self.curator_id, self.id
 
     def graduated(self):
         _data = {}
         with self.get_db() as conn:
             conn.row_factory = self.get_db_factory()
             cursor = conn.cursor()
-            cursor.execute(f'''SELECT st.* FROM marks LEFT JOIN {self._table} s ON m.student_id = s.id 
-                           WHERE m.mark = 5 GROUP BY s.id''')
+            cursor.execute(f'''SELECT s.*, ROUND(AVG(mark), 2) as avg_mark FROM {self._table} s 
+            LEFT JOIN mark m ON m.student_id = s.id WHERE 1 GROUP BY s.id HAVING AVG(mark) > 4''')
+            for row in cursor.fetchall():
+                _data[row['id']] = row
+        return _data
+
+    def all_format(self):
+        _data = {}
+        with self.get_db() as conn:
+            conn.row_factory = self.get_db_factory()
+            cursor = conn.cursor()
+            cursor.execute(f'''SELECT s.*, ROUND(AVG(mark), 2) as avg_mark FROM {self._table} s 
+            LEFT JOIN mark m ON m.student_id = s.id WHERE 1 GROUP BY s.id''')
             for row in cursor.fetchall():
                 _data[row['id']] = row
         return _data

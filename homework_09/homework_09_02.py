@@ -65,22 +65,22 @@ class RandomStudent:
 
     def set_faculty(self):
         for row in self.faculty:
-            model = faculty.Faculty(row)
+            model = faculty.Faculty(title=row)
             model.create()
 
     def set_course(self):
         for row in self.course:
-            model = course.Course(row)
+            model = course.Course(title=row)
             model.create()
 
     def set_group(self):
         for row in self.group:
-            model = sg.StudentGroup(row)
+            model = sg.StudentGroup(title=row)
             model.create()
 
     def set_curator(self):
         for row in self.curator:
-            model = curator.Curator(row)
+            model = curator.Curator(title=row)
             model.create()
 
     def set_students(self):
@@ -98,6 +98,7 @@ class RandomStudent:
             model = student.Student(first_name=first_name, last_name=last_name, padre_name=padre_name, group_id=group_id,
                                     faculty_id=faculty_id, curator_id=curator_id)
             model.create()
+            i += 1
 
     def set_marks(self):
         data_course = course.Course().all_id()
@@ -109,13 +110,25 @@ class RandomStudent:
             stud_mark = choice(self.mark)
             model = mark.Mark(course_id=course_id, student_id=student_id, mark=stud_mark)
             model.create()
+            i += 1
 
 
 if __name__ == '__main__':
     instr = RandomStudent()
     instr.set_faculty()
+    instr.set_course()
     instr.set_group()
     instr.set_curator()
-    instr.set_course()
     instr.set_students()
     instr.set_marks()
+    # model = student.Student(id=8828, first_name='Name 33', last_name='Family 44').update()
+    # print(model)
+    # model = faculty.Faculty(id=1, title='Faculty 10').update()
+    # print(model)
+    # faculty.Faculty(id=1).one()
+    # print(model)
+    # flag = faculty.Faculty(id=2).delete()
+    # print(flag)
+    # data = faculty.Faculty().all()
+    # print(data)
+
