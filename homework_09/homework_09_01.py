@@ -40,7 +40,7 @@ def api_student(id=None):
         return jsonify(data)
 
     elif request.method == 'PUT':
-        data = student.Student(**request.json).update()
+        data = student.Student(id=id, **request.json).update()
         return jsonify(data)
 
     elif request.method == 'DELETE':
@@ -62,7 +62,7 @@ def api_mark(id=None):
         return jsonify(data)
 
     elif request.method == 'PUT':
-        data = mark.Mark(**request.json).update()
+        data = mark.Mark(id=id, **request.json).update()
         return jsonify(data)
 
     elif request.method == 'DELETE':
@@ -84,7 +84,7 @@ def api_faculty(id=None):
         return jsonify(data)
 
     elif request.method == 'PUT':
-        data = faculty.Faculty(**request.json).update()
+        data = faculty.Faculty(id=id, **request.json).update()
         return jsonify(data)
 
     elif request.method == 'DELETE':
@@ -106,7 +106,7 @@ def api_curator(id=None):
         return jsonify(data)
 
     elif request.method == 'PUT':
-        data = curator.Curator(**request.json).create()
+        data = curator.Curator(id=id, **request.json).create()
         return jsonify(data)
 
     elif request.method == 'DELETE':
@@ -128,7 +128,7 @@ def api_course(id=None):
         return jsonify(data)
 
     elif request.method == 'PUT':
-        data = course.Course(**request.json).create()
+        data = course.Course(id=id, **request.json).create()
         return jsonify(data)
 
     elif request.method == 'DELETE':
@@ -150,7 +150,7 @@ def api_group(id=None):
         return jsonify(data)
 
     elif request.method == 'PUT':
-        data = sg.StudentGroup(**request.json).create()
+        data = sg.StudentGroup(id=id, **request.json).create()
         return jsonify(data)
 
     elif request.method == 'DELETE':
