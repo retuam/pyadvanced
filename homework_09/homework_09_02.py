@@ -8,21 +8,21 @@ class RandomStudent:
 
     def __init__(self):
         self.faculty = [
-            'Faculty 1',
-            'Faculty 2',
-            'Faculty 3',
-            'Faculty 4',
+            'Arts',
+            'Engineering',
+            'Science',
+            'Health',
         ]
 
         self.curator = [
-            'Curator 1',
-            'Curator 2',
+            'Artur Pirozhkov',
+            'Philip Kirkorov',
         ]
 
         self.group = [
-            'Student group 1',
-            'Student group 2',
-            'Student group 3',
+            'Group A1',
+            'Group A2',
+            'Group A3',
         ]
 
         self.course = [
@@ -32,27 +32,27 @@ class RandomStudent:
         ]
 
         self.first_name = [
-            'Name 1',
-            'Name 2',
-            'Name 3',
-            'Name 4',
-            'Name 5',
+            'Donald',
+            'Georg',
+            'Ivan',
+            'Juan',
+            'Pablo',
         ]
 
         self.last_name = [
-            'Family 1',
-            'Family 2',
-            'Family 3',
-            'Family 4',
-            'Family 5',
+            'Picasso',
+            'Zaecev',
+            'Smith',
+            'Kravchenko',
+            'Green',
         ]
 
         self.padre_name = [
-            'Father 1',
-            'Father 2',
-            'Father 3',
-            'Father 4',
-            'Father 5',
+            'Ivanovich',
+            'Pavlovich',
+            'Semenovich',
+            'Anatolievich',
+            'Vladimirovich',
         ]
 
         self.mark = [
