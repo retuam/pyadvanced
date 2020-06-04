@@ -1,4 +1,4 @@
-from homework_10 import models
+from homework_10.practice import models
 from random import choice
 
 

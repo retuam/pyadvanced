@@ -6,9 +6,9 @@
 # данными :) ). Добавить вывод всех постов по тегу, при каждом обращении к
 # конкретному посту увеличивать кол-во просмотров на 1. При обращении к
 # автору, выводить все его публикации.
-from flask import Flask, request, jsonify
+from flask import Flask
 from flask_restful import Api
-from homework_10.resources import *
+from homework_10.practice.resources import *
 
 
 app = Flask(__name__)
