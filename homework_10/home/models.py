@@ -1,9 +1,3 @@
-# 1) Реализовать REST интернет магазина. Модель товар (,
-# доступность),
-# Категория (описание, название). При обращении к конкретному товару
-# увеличивать кол-во просмотров на 1. Добавить модуль для заполнения
-# БД валидными данными. Реализовать подкатегории (доп. Бал). Добавить
-# роут, который выводят общую стоимость товаров в магазине
 import mongoengine as me
 import datetime
 
@@ -26,14 +20,13 @@ class Subcategory(me.Document):
 
 
 class Product(me.Document):
-    category = me.ReferenceField(Category)
     subcategory = me.ReferenceField(Subcategory)
     title = me.StringField(min_length=3, max_length=256, required=True)
     body = me.StringField(min_length=3, max_length=4096, required=True)
     created = me.DateTimeField(default=datetime.datetime.now())
     views = me.IntField(default=0)
     qty = me.IntField(default=0)
-    price = me.FloatFieldField(default=0)
+    price = me.FloatField(default=0)
     sale = me.BooleanField(default=False)
 
     def add_view(self):
@@ -47,3 +40,13 @@ class Product(me.Document):
 
     def __str__(self):
         return f'{self.id} - {self.title}'
+
+
+if __name__ == '__main__':
+    category = Category.objects.create(title='Продукты')
+    subcategory = Subcategory.objects.create(title='Овощи', category=category)
+    Product.objects.create(subcategory=subcategory,
+                           title='Помидор',
+                           body='Красные помидоры и розовые помидорчики',
+                           price=100,
+                           sale=True)

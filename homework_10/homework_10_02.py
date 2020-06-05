@@ -20,8 +20,8 @@ api.add_resource(
 api.add_resource(
     ProductResource,
     '/product',
-    '/product/<category_id>',
-    '/product/<subcategory_id>',
+    '/product/category/<category_id>',
+    '/product/subcategory/<subcategory_id>',
     '/product/<id>'
 )
 

@@ -31,8 +31,10 @@ class AuthorResource(Resource):
         json_data = json.dumps(request.json)
         try:
             res = schemas.AuthorSchema().loads(json_data)
-            data = Author.objects(id=id).update(**res)
-            res = jsonify(data)
+            Author.objects(id=id).update(**res)
+            data = Author.objects(id=id).first()
+            json_obj = schemas.AuthorSchema().dumps(data)
+            res = jsonify(json.loads(json_obj))
         except ValidationError as err:
             res = err.messages
         return res

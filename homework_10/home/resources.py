@@ -2,25 +2,39 @@ from flask_restful import Resource
 from homework_10.home.models import *
 from flask import request, jsonify
 import json
+from homework_10.home import schemas
+from marshmallow import ValidationError
 
 
 class CategoryResource(Resource):
     def get(self, id=None):
         if id:
-            data = Category.objects(id=id).first().to_json()
+            json_obj = schemas.CategorySchema().dumps(Category.objects(id=id).first())
         else:
-            data = Category.objects.all().to_json()
-        return jsonify(json.loads(data))
+            json_obj = schemas.CategorySchema(many=True).dumps(Category.objects.all())
+        return jsonify(json.loads(json_obj))
 
     def post(self):
-        _post = request.get_json(force=True)
-        data = Category.objects.create(**_post)
-        return jsonify(json.loads(data.to_json()))
+        json_data = json.dumps(request.json)
+        try:
+            res = schemas.CategorySchema().loads(json_data)
+            Category.objects.create(**res)
+            res = json.loads(schemas.CategorySchema().dumps(res))
+        except ValidationError as err:
+            res = err.messages
+        return res
 
     def put(self, id):
-        _post = request.get_json(force=True)
-        data = Category.objects(id=id).update(**_post)
-        return jsonify(data)
+        json_data = json.dumps(request.json)
+        try:
+            res = schemas.CategorySchema().loads(json_data)
+            Category.objects(id=id).update(**res)
+            data = Category.objects(id=id).first()
+            json_obj = schemas.CategorySchema().dumps(data)
+            res = jsonify(json.loads(json_obj))
+        except ValidationError as err:
+            res = err.messages
+        return res
 
     def delete(self, id):
         data = Category.objects(id=id).delete()
@@ -30,20 +44,32 @@ class CategoryResource(Resource):
 class SubcategoryResource(Resource):
     def get(self, id=None):
         if id:
-            data = Subcategory.objects(id=id).first().to_json()
+            json_obj = schemas.SubcategorySchema().dumps(Subcategory.objects(id=id).first())
         else:
-            data = Subcategory.objects.all().to_json()
-        return jsonify(json.loads(data))
+            json_obj = schemas.SubcategorySchema(many=True).dumps(Subcategory.objects.all())
+        return jsonify(json.loads(json_obj))
 
     def post(self):
-        _post = request.get_json(force=True)
-        data = Subcategory.objects.create(**_post)
-        return jsonify(json.loads(data.to_json()))
+        json_data = json.dumps(request.json)
+        try:
+            res = schemas.SubcategorySchema().loads(json_data)
+            Subcategory.objects.create(**res)
+            res = json.loads(schemas.SubcategorySchema().dumps(res))
+        except ValidationError as err:
+            res = err.messages
+        return res
 
     def put(self, id):
-        _post = request.get_json(force=True)
-        data = Subcategory.objects(id=id).update(**_post)
-        return jsonify(data)
+        json_data = json.dumps(request.json)
+        try:
+            res = schemas.SubcategorySchema().loads(json_data)
+            Subcategory.objects(id=id).update(**res)
+            data = Subcategory.objects(id=id).first()
+            json_obj = schemas.SubcategorySchema().dumps(data)
+            res = jsonify(json.loads(json_obj))
+        except ValidationError as err:
+            res = err.messages
+        return res
 
     def delete(self, id):
         data = Subcategory.objects(id=id).delete()
@@ -55,31 +81,58 @@ class ProductResource(Resource):
         if id:
             post = Product.objects(id=id).first()
             post.add_view()
-            data = post.to_json()
-        elif subcategory_id:
-            _subcategory = Subcategory.objects(id=subcategory_id).first()
-            data = Product.objects.filter(subcategory=_subcategory).to_json()
-        elif category_id:
-            _category = Subcategory.objects(id=category_id).first()
-            data = Subcategory.objects.filter(category=_category).to_json()
+            json_obj = schemas.ProductSchema().dumps(post)
         else:
-            data = Product.objects().all().to_json()
-        return jsonify(json.loads(data))
+            if category_id:
+                _category = Category.objects(id=category_id).first()
+                _sabcategories = Subcategory.objects.filter(category=_category).all()
+                data = Product.objects.filter(subcategory__in=_sabcategories).all()
+            elif subcategory_id:
+                _category = Category.objects(id=id).first()
+                data = Product.objects.filter(category=_category).all()
+            else:
+                data = Product.objects.all()
+
+            json_obj = schemas.ProductSchema(many=True).dumps(data)
+
+        return jsonify(json.loads(json_obj))
 
     def post(self):
-        _post = request.get_json(force=True)
-        data = Product.objects.create(**_post)
-        return jsonify(json.loads(data.to_json()))
+        json_data = request.get_json(force=True)
+        try:
+            res = self.edit(json_data)
+            Product.objects.create(**res)
+            res = json.loads(schemas.ProductSchema().dumps(res))
+        except ValidationError as err:
+            res = err.messages
+        return res
 
     def put(self, id):
-        _post = request.get_json(force=True)
-        data = Product.objects(id=id).update(**_post)
-        return jsonify(data)
+        json_data = request.get_json(force=True)
+        try:
+            res = self.edit(json_data)
+            Product.objects(id=id).update(**res)
+            data = Product.objects(id=id).first()
+            json_obj = schemas.ProductSchema().dumps(data)
+            res = jsonify(json.loads(json_obj))
+        except ValidationError as err:
+            res = err.messages
+        return res
 
     def delete(self, id):
         data = Product.objects(id=id).delete()
         return jsonify(data)
 
-class TotalResource(Resource):
-    pass
+    def edit(self, json_data):
+        res = schemas.ProductSchema().loads(json.dumps(json_data))
+        res['subcategory'] = Subcategory.objects.filter(name=json_data['subcategory']['title']).first()
+        return res
 
+
+class TotalResource(Resource):
+    def get(self):
+        data = Product.objects.all()
+
+        json_obj = schemas.ProductSchema(many=True).dumps(data)
+
+        return jsonify(json.loads(json_obj))

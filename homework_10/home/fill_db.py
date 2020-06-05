@@ -1,38 +1,63 @@
-from homework_10.practice import models
-from random import choice
+from homework_10.home import models
+from random import uniform, choice
 
 
 def fill_db():
-    author_list = [
-        models.Author.objects.create(name='Роберт', surname='Говард'),
-        models.Author.objects.create(name='Агата', surname='Кристи'),
-        models.Author.objects.create(name='Станислав', surname='Лэм'),
+    category_list = [
+        models.Category.objects.create(title='Техника'),
+        models.Category.objects.create(title='Продукты питания'),
+        models.Category.objects.create(title='Книги'),
     ]
 
-    tag_list = [
-        models.Tag.objects.create(title='Детектив'),
-        models.Tag.objects.create(title='Роман'),
-        models.Tag.objects.create(title='Фэнтези'),
-        models.Tag.objects.create(title='Новелла'),
+    subcategory_list = [
+        models.Subcategory.objects.create(title='Овощи', category=category_list[1]),
+        models.Subcategory.objects.create(title='Фрукты', category=category_list[1]),
+        models.Subcategory.objects.create(title='Компьютеры', category=category_list[0]),
+        models.Subcategory.objects.create(title='Бытовая', category=category_list[0]),
+        models.Subcategory.objects.create(title='Романы', category=category_list[2]),
+        models.Subcategory.objects.create(title='Детективы', category=category_list[2]),
     ]
 
-    title_list = [
-        'Конан варвар из Киммерии',
-        'Эркюль Пуаро',
-        'Солярис',
-    ]
+    product_list = {
+        0: {
+            'Помидоры': 'Красные и спелые',
+            'Огурцы': 'Зеленые огурцы из Турции',
+            'Лук': 'Крымский синий лук',
+        },
+        1: {
+            'Лимон': 'Спелый, сочный, тонкошкурый',
+            'Апельсин': 'Испанский Naranja',
+            'Лайм': 'Идеальный для текилы',
+        },
+        2: {
+            'Ноутбук ASUS': '15 дюймов, AMD, GeForce',
+            'MacBook Air': 'Идеальный ноубтук для работы',
+            'Видеокарта NVIDEO': 'Для тех кто знает толк в Bitcoin',
+        },
+        3: {
+            'Стиральная машина Samsung': 'Стирает как зверь',
+            'Эл.чайник Vitek': 'Самый простой и надежный чайник',
+            'Холодильник Урал': 'О котором пела група Чайф',
+        },
+        4: {
+            'Война и мир': 'Лев Николаевич Толстой. 4-томник',
+            'Поднятая целина': 'Михаил Александрович Шолохов. Дед Щукарь и другие',
+            'Моби Дик': 'Или как моряки за китовым жиром ходили',
+        },
+        5: {
+            'Записки о Шерлоке Холмсе': 'Собака Баскервилей',
+            'Лейтенант Коломбо': 'Одноглазый Питер Фальк',
+            'Турецкий гамбит': 'О русско-турецкой войне, предательстве и любви',
+        },
+    }
 
-    body_list = [
-        'Текст о конане варваре из Киммерии....',
-        'Текст о дектективе....',
-        'Текст фантастический....',
-    ]
-
-    for _ in range(10):
-        models.Post.objects.create(author=choice(author_list),
-                                   title=choice(title_list),
-                                   body=choice(body_list),
-                                   tags=[choice(tag_list), choice(tag_list)])
+    for key, value in product_list.items():
+        for k, v in value.items():
+            models.Product.objects.create(subcategory=subcategory_list[key],
+                                          title=k,
+                                          body=v,
+                                          price=uniform(10, 100),
+                                          sale=choice(True, True, False))
 
 
 if __name__ == '__main__':
