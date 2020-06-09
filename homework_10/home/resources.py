@@ -88,8 +88,8 @@ class ProductResource(Resource):
                 _sabcategories = Subcategory.objects.filter(category=_category).all()
                 data = Product.objects.filter(subcategory__in=_sabcategories).all()
             elif subcategory_id:
-                _category = Category.objects(id=id).first()
-                data = Product.objects.filter(category=_category).all()
+                _subcategory = Subcategory.objects(id=subcategory_id).first()
+                data = Product.objects.filter(subcategory=_subcategory).all()
             else:
                 data = Product.objects.all()
 
@@ -132,7 +132,13 @@ class ProductResource(Resource):
 class TotalResource(Resource):
     def get(self):
         data = Product.objects.all()
+        agr = 0
+        if len(data):
+            for row in data:
+                agr += row.price
 
-        json_obj = schemas.ProductSchema(many=True).dumps(data)
+            agr = round(agr / len(data), 2)
 
-        return jsonify(json.loads(json_obj))
+        # json_obj = schemas.ProductSchema(many=True).dumps(data)
+
+        return jsonify(agr)

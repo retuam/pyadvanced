@@ -56,8 +56,8 @@ def fill_db():
             models.Product.objects.create(subcategory=subcategory_list[key],
                                           title=k,
                                           body=v,
-                                          price=uniform(10, 100),
-                                          sale=choice(True, True, False))
+                                          price=round(uniform(10, 100), 2),
+                                          sale=choice([True, True, False]))
 
 
 if __name__ == '__main__':
