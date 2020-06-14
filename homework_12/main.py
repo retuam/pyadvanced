@@ -8,7 +8,7 @@ import math
 
 
 bot = TeleBot("1116314719:AAGmn_YjFsl0k8acvd1FBL2f_E_HNe6Cdds")
-
+SIZE = 4096
 
 def get_head(html):
     soup = BeautifulSoup(html, 'lxml')
@@ -37,10 +37,10 @@ def any_text(message):
         bot.send_message(message.chat.id, block)
         fragment = soup.find('div', id='mw-content-text')
         all_text = ''.join(fragment.findAll(text=True))
-        qty = math.ceil(len(all_text) / 4096)
+        qty = math.ceil(len(all_text) / SIZE)
         for i in range(0, qty):
-            min = i * 4096
-            max = (i + 1) * 4096
+            min = i * SIZE
+            max = (i + 1) * SIZE
             bot.send_message(message.chat.id, all_text[min:max])
 
 
