@@ -36,7 +36,7 @@ def hello(message):
     user = User.objects(chat_id=message.chat.id).first()
     if user:
         bot.send_message(message.chat.id, '''Здравствуйте, я Бот-консультант, предыдущие данные о Вас очищены. 
-        Как Ваше имя?''')
+Как Ваше имя?''')
         User.objects(chat_id=message.chat.id).delete()
     else:
         bot.send_message(message.chat.id, 'Здравствуйте, я Бот-консультант, а как Ваше имя?')
