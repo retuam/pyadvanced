@@ -38,7 +38,6 @@ def any_text(message):
         fragment = soup.find('div', id='mw-content-text')
         all_text = ''.join(fragment.findAll(text=True))
         qty = math.ceil(len(all_text) / 4096)
-        print(qty)
         for i in range(0, qty):
             min = i * 4096
             max = (i + 1) * 4096
