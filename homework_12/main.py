@@ -9,6 +9,8 @@ import math
 
 bot = TeleBot("1116314719:AAGmn_YjFsl0k8acvd1FBL2f_E_HNe6Cdds")
 SIZE = 4096
+URL = 'https://www.wikipedia.org/search-redirect.php?family=wikipedia&language=en&language=ru&go=Go'
+
 
 def get_head(html):
     soup = BeautifulSoup(html, 'lxml')
@@ -22,7 +24,7 @@ def start(message):
 
 @bot.message_handler(content_types=['text'])
 def any_text(message):
-    url = f'https://www.wikipedia.org/search-redirect.php?family=wikipedia&language=en&search={message.text}&language=ru&go=Go'
+    url = f'{URL}&search={message.text}'
     r = requests.get(url)
     r.encoding = 'utf8'
     soup = get_head(r.text)
@@ -36,6 +38,7 @@ def any_text(message):
         block = soup.find('link', rel='canonical').get('href')
         bot.send_message(message.chat.id, block)
         fragment = soup.find('div', id='mw-content-text')
+        fragment.find('style').extract()
         all_text = ''.join(fragment.findAll(text=True))
         qty = math.ceil(len(all_text) / SIZE)
         for i in range(0, qty):
