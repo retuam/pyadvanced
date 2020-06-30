@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_restful import Api
-from course.webshop.api.resources import *
+from api.resources import *
 
 
 app = Flask(__name__)

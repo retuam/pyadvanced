@@ -1,10 +1,10 @@
 from telebot import TeleBot
 from telebot.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
 
-from course.webshop.db.models import Text, Category, Products, User, Cart, Order
-from course.webshop.bot.config import TOKEN
-from course.webshop.bot.keyboards import START_KB, CART_KB
-from course.webshop.bot.lookups import *
+from webshop.db.models import Text, Category, Products, User, Cart, Order
+from webshop.bot.config import TOKEN
+from webshop.bot.keyboards import START_KB, CART_KB
+from webshop.bot.lookups import *
 
 
 bot = TeleBot(TOKEN)

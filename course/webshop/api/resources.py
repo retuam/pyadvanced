@@ -1,8 +1,8 @@
 from flask_restful import Resource
-from course.webshop.db.models import *
+from webshop.db.models import *
 from flask import request, jsonify
 import json
-from course.webshop.api import schemas
+from webshop.api import schemas
 from marshmallow import ValidationError
 
 

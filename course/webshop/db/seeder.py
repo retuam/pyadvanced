@@ -1,4 +1,4 @@
-from course.webshop.db.models import Category, Products, ProductsAttribute
+from webshop.db.models import Category, Products, ProductsAttribute
 from random import randint, choice
 
 
