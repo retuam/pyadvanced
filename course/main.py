@@ -1,4 +1,4 @@
-from course.webshop.bot.main import bot
+from course.webshop.bot.main import *
 from flask import Flask, request, abort
 from telebot.types import Update
 from course.webshop.bot.config import WEBHOOK_PATH, WEBHOOK_URL
