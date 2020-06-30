@@ -1,7 +1,7 @@
-from webshop.bot.main import *
+from webshop.bot.main import start_bot, bot
+from webshop.bot import config
 from flask import Flask, request, abort
 from telebot.types import Update
-from webshop.bot import config
 
 
 app = Flask(__name__)
@@ -19,6 +19,9 @@ def webhook():
 
 
 if __name__ == '__main__':
+    import time
+    bot.remove_webhook()
+    time.sleep(1)
     bot.set_webhook(
         config.WEBHOOK_URL,
         certificate=open('webhook_cert.pem', 'r')
