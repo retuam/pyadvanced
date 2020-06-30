@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../april_project" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../itea_advanced_april" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../itea_python_basics_3" vcs="Git" />
+  </component>
+</project>
